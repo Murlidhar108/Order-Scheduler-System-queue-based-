@@ -1,18 +1,22 @@
 const orderQueue = require('../config/queue');
 const db = require('../config/db');
 
-orderQueue.process(async (job) => {
-  const { orderId, userId } = job.data;
+orderQueue.process((job, done) => {
+  const { order_id, user_id } = job.data;
 
-  console.log(`Placing order ${orderId} for user ${userId}`);
+  console.log(`🕒 Executing order ${order_id} for user ${user_id}`);
 
-  // Simulate order placement
-  await new Promise(r => setTimeout(r, 1000));
+  // simulate order execution
+  setTimeout(() => {
+    db.query(
+      'UPDATE orders SET status = ? WHERE order_id = ?',
+      ['COMPLETED', order_id],
+      (err) => {
+        if (err) return done(err);
 
-  await db.query(
-    'UPDATE orders SET status = ? WHERE id = ?',
-    ['COMPLETED', orderId]
-  );
-
-  console.log(`Order ${orderId} completed`);
+        console.log(`✅ Order ${order_id} completed`);
+        done();
+      }
+    );
+  }, 1000);
 });
