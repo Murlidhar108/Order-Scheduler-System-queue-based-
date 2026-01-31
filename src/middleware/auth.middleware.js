@@ -1,37 +1,46 @@
+const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
-module.exports = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-
+module.exports = async (req, res, next) => {
+  try {
+    // 1️⃣ Get token from header
+    const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).json({ error: 'Missing Authorization header' });
+      return res.status(401).json({
+        error: 'No token provided'
+      });
     }
 
-    // Expecting: Authorization: Bearer <token>
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1]; // Bearer <token>
 
-    if (!token) {
-        return res.status(401).json({ error: 'Invalid Authorization format' });
-    }
+    console.log('Auth Header:', req.headers.authorization);
 
-    const query = 'SELECT user_id, email FROM users WHERE token = ?';
 
-    db.query(query, [token], (err, rows) => {
-        if (err) {
-            console.error('Auth DB error:', err);
-            return res.status(500).json({ error: 'Auth middleware error' });
-        }
+    // 2️⃣ Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (rows.length === 0) {
-            return res.status(401).json({ error: 'Invalid token' });
-        }
+console.log('Decoded token:', decoded);
+console.log('decoded id:', decoded.user_id)
 
-        // Attach user to request
-        req.user = {
-            user_id: rows[0].user_id,
-            email: rows[0].email
-        };
+const [rows] = await db.promise().query(
+  'SELECT * FROM users WHERE user_id = ?',
+  [decoded.user_id]
+);
 
-        next();
+if (!rows.length) {
+  return res.status(401).json({
+    error: 'Session expired, please login again'
+  });
+}
+
+req.user = rows[0];
+next();
+
+
+  } catch (err) {
+    // ✅ THIS IS WHERE YOUR CODE GOES
+    return res.status(401).json({
+      error: 'Session expired, please login again'
     });
+  }
 };

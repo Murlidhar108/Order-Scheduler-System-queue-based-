@@ -2,3 +2,10 @@
 [31/1/2026, 17:10:00] ORDER_EXECUTED | order_id=2 | execution=2
 [31/1/2026, 17:11:00] ORDER_EXECUTED | order_id=2 | execution=3
 [31/1/2026, 17:11:00] ORDER_COMPLETED | order_id=2
+[31/1/2026, 20:56:24] ORDER_CREATED | user_id=10 | order_id=3
+[31/1/2026, 20:58:00] ORDER_EXECUTED | order_id=3 | execution=1
+[31/1/2026, 21:02:20] ORDER_CREATED | user_id=10 | order_id=4
+[31/1/2026, 21:05:39] ORDER_EXECUTED | order_id=4 | execution=1
+[31/1/2026, 21:05:39] ORDER_EXECUTED | order_id=4 | execution=2
+[31/1/2026, 21:06:00] ORDER_EXECUTED | order_id=4 | execution=3
+[31/1/2026, 21:06:00] ORDER_COMPLETED | order_id=4

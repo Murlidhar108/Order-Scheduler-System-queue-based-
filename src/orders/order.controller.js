@@ -83,3 +83,13 @@ exports.deleteOrder = (req, res) => {
     res.json({ message: 'Order deleted successfully' });
   });
 };
+
+
+exports.logout = async (req, res) => {
+  await db.promise().query(
+    'UPDATE users SET token = NULL WHERE id = ?',
+    [req.user.id]
+  );
+
+  res.json({ message: 'Logged out successfully' });
+};

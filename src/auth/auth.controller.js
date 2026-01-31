@@ -1,56 +1,101 @@
-const db = require("../config/db");
-const { v4: uuidv4 } = require("uuid");
+const bcrypt = require('bcryptjs');
+const db = require('../config/db');
+const { generateToken } = require('../utils/jwt');
 
-exports.login = (req, res) => {
-  const { email } = req.body;
+exports.signup = async (req, res) => {
+  const { email, password } = req.body;
 
-  if (!email) {
-    return res.status(400).json({ message: "Email required" });
+  if (!email || !password)
+    return res.status(400).json({ error: 'Email & password required' });
+
+  // check existing user
+  const [existing] = await db.promise().query(
+    'SELECT * FROM users WHERE email = ?',
+    [email]
+  );
+
+  if (existing.length)
+    return res.status(409).json({ error: 'User already exists' });
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const [result] = await db.promise().query(
+    'INSERT INTO users (email, password) VALUES (?, ?)',
+    [email, hashedPassword]
+  );
+
+  const user = { id: result.insertId, email };
+
+  const token = generateToken(user);
+
+  await db.promise().query(
+    'UPDATE users SET token = ? WHERE user_id = ?',
+    [token, user.id]
+  );
+
+  res.status(201).json({ token });
+};
+
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  const [rows] = await db.promise().query(
+    'SELECT * FROM users WHERE email = ?',
+    [email]
+  );
+
+  if (!rows.length)
+    return res.status(401).json({ error: 'Invalid credentials' });
+
+  const user = rows[0];
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch)
+    return res.status(401).json({ error: 'Invalid credentials' });
+
+  const token = generateToken(user);
+
+  await db.promise().query(
+    'UPDATE users SET token = ? WHERE user_id = ?',
+    [token, user.id]
+  );
+
+  res.json({ token });
+};
+
+exports.getCurrentUser = async (req, res) => {
+  try {
+    // req.user is attached by auth.middleware
+    res.json({
+      id: req.user.id,
+      email: req.user.email
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: 'Failed to fetch user'
+    });
   }
+};
 
-  const token = `mock-${uuidv4()}`;
 
-  // Step 1: check if user exists
-  const selectQuery = "SELECT user_id FROM users WHERE email = ?";
+exports.logout = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
 
-  db.query(selectQuery, [email], (err, rows) => {
-    if (err) {
-      console.error("SELECT error:", err);
-      return res.status(500).json({ message: "DB error" });
-    }
+    // optional: clear token from DB
+    await db.promise().query(
+      'UPDATE users SET token = NULL WHERE user_id = ?',
+      [userId]
+    );
 
-    // Step 2A: user exists → update token
-    if (rows.length > 0) {
-      const updateQuery = "UPDATE users SET token = ? WHERE email = ?";
-
-      db.query(updateQuery, [token, email], (err) => {
-        if (err) {
-          console.error("UPDATE error:", err);
-          return res.status(500).json({ message: "DB error" });
-        }
-
-        return res.json({
-          message: "Login successful",
-          token
-        });
-      });
-
-    } 
-    // Step 2B: new user → insert
-    else {
-      const insertQuery = "INSERT INTO users (email, token) VALUES (?, ?)";
-
-      db.query(insertQuery, [email, token], (err) => {
-        if (err) {
-          console.error("INSERT error:", err);
-          return res.status(500).json({ message: "DB error" });
-        }
-
-        return res.json({
-          message: "Login successful",
-          token
-        });
-      });
-    }
-  });
+    return res.json({
+      message: 'Logged out successfully'
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+    return res.status(500).json({
+      error: 'Logout failed'
+    });
+  }
 };
