@@ -1,8 +1,4 @@
-[31/1/2026, 15:19:37] ORDER_CREATED | user_id=1 | order_id=2
-[31/1/2026, 15:30:54] ORDER_CREATED | user_id=1 | order_id=3
-[31/1/2026, 15:32:00] ORDER_EXECUTED | order_id=3 | execution=1
-[31/1/2026, 15:32:00] ORDER_COMPLETED | order_id=3
-[31/1/2026, 15:36:25] ORDER_CREATED | user_id=1 | order_id=1
-[31/1/2026, 15:38:00] ORDER_EXECUTED | order_id=1 | execution=2
-[31/1/2026, 15:39:00] ORDER_EXECUTED | order_id=1 | execution=3
-[31/1/2026, 15:39:00] ORDER_COMPLETED | order_id=1
+[31/1/2026, 17:07:33] ORDER_CREATED | user_id=5 | order_id=2
+[31/1/2026, 17:10:00] ORDER_EXECUTED | order_id=2 | execution=2
+[31/1/2026, 17:11:00] ORDER_EXECUTED | order_id=2 | execution=3
+[31/1/2026, 17:11:00] ORDER_COMPLETED | order_id=2

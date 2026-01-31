@@ -13,13 +13,6 @@ function getISTTime() {
 }
 
 function log(message) {
-//   const line = `[${new Date().toISOString()}] ${message}\n`;
-//   const line = `[${getISTTime()}] ${message}\n`;
-
-//  fs.appendFileSync(logFile, line, 'utf8');
-
-//   console.log(line.trim());
-
 try {
      const line = `[${getISTTime()}] ${message}\n`;
      fs.appendFileSync(logFile, line, 'utf8');
