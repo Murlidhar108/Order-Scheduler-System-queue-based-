@@ -1,18 +1,44 @@
 const service = require('./order.service');
 
 exports.createOrder = (req, res) => {
-  const { schedule_time } = req.body;
+
+  console.log("i am working")
+  
+  const {
+    schedule_time,
+    is_recurring = false,
+    repeat_interval = null,
+    repeat_unit = null,
+    max_executions = null
+  } = req.body;
+
   const user_id = req.user.user_id;
 
-  service.createOneTimeOrder(user_id, schedule_time, (err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Failed to schedule order' });
-    }
+  console.log("i am working")
 
-    res.json({ message: 'Order scheduled successfully' });
-  });
+  service.createOrder(
+    {
+      user_id,
+      schedule_time,
+      is_recurring,
+      repeat_interval,
+      repeat_unit,
+      max_executions
+    },
+    (err, order_id) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Failed to create order' });
+      }
+
+      res.json({
+        message: 'Order scheduled successfully',
+        order_id
+      });
+    }
+  );
 };
+
 
 // View all orders for a user
 exports.getOrders = (req, res) => {
@@ -29,10 +55,13 @@ exports.getOrders = (req, res) => {
 exports.updateOrder = (req, res) => {
   console.log("working");
   const { order_id } = req.params;
+
+  console.log('REQ BODY:', req.body);
+
   console.log(order_id);
   const { schedule_time, status } = req.body;
 
-  service.updateOrder(order_id, { schedule_time, status }, (err) => {
+  service.updateOrder(order_id, req.body, (err) => {
     if (err) return res.status(500).json({ error: 'DB error' });
 
     res.json({ message: 'Order updated successfully' });

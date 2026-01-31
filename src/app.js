@@ -1,4 +1,6 @@
+require('./workers/order.workers');
 const express = require('express');
+
 
 const authRoutes = require('./auth/auth.routes');
 const orderRoutes = require('./orders/order.routes');
