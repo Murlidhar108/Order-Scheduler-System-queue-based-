@@ -7,7 +7,8 @@ console.log('🔥 Order worker started and listening...');   // ust to check, wo
 orderQueue.process(async (job) => {
   const { order_id, user_id } = job.data;
 
-  console.log(`🕒 Executing order ${order_id} for user ${user_id}`);
+  // log(`ORDER_EXECUTED | order_id=${order_id} | execution=${newCount}`);
+
 
   // 1️⃣ Fetch latest order
   const [rows] = await db.promise().query(
@@ -26,7 +27,8 @@ orderQueue.process(async (job) => {
     [newCount, order_id]
   );
 
-  log(`ORDER_EXECUTED | order_id=${order_id} | execution=${newCount}`);
+ log(`ORDER_EXECUTED | order_id=${order_id} | execution=${newCount}`);
+
 
   // 3️⃣ Decide recurrence
   const shouldRepeat =
@@ -41,7 +43,8 @@ orderQueue.process(async (job) => {
       ['COMPLETED', order_id]
     );
 
-    log(`ORDER_COMPLETED | order_id=${order_id}`);
+   log(`ORDER_COMPLETED | order_id=${order_id}`);
+
   }
 });
 
@@ -80,6 +83,9 @@ async function scheduleNextRun(order) {
       attempts: 3
     }
   );
+
+  // log(`ORDER_CREATED | user_id=${user_id} | order_id=${order_id}`);
+
 
   console.log(`🧩 Next execution scheduled at ${nextTime}`);
 }

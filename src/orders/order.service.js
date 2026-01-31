@@ -27,6 +27,7 @@ exports.createOneTimeOrder = (user_id, schedule_time, callback) => {
       );
 
       log(`ORDER_CREATED | user_id=${user_id} | order_id=${order_id}`);
+
       
     });
 
@@ -86,7 +87,8 @@ exports.createOrder = (data, callback) => {
           [job.id, order_id]
         );
 
-          log(`ORDER_CREATED | user_id=${user_id} | order_id=${order_id}`);
+         log(`ORDER_CREATED | user_id=${user_id} | order_id=${order_id}`);
+
 
       });
 

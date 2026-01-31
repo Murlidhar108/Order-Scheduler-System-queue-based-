@@ -1,11 +1,16 @@
-[31/1/2026, 17:07:33] ORDER_CREATED | user_id=5 | order_id=2
-[31/1/2026, 17:10:00] ORDER_EXECUTED | order_id=2 | execution=2
-[31/1/2026, 17:11:00] ORDER_EXECUTED | order_id=2 | execution=3
-[31/1/2026, 17:11:00] ORDER_COMPLETED | order_id=2
-[31/1/2026, 20:56:24] ORDER_CREATED | user_id=10 | order_id=3
-[31/1/2026, 20:58:00] ORDER_EXECUTED | order_id=3 | execution=1
-[31/1/2026, 21:02:20] ORDER_CREATED | user_id=10 | order_id=4
-[31/1/2026, 21:05:39] ORDER_EXECUTED | order_id=4 | execution=1
-[31/1/2026, 21:05:39] ORDER_EXECUTED | order_id=4 | execution=2
-[31/1/2026, 21:06:00] ORDER_EXECUTED | order_id=4 | execution=3
-[31/1/2026, 21:06:00] ORDER_COMPLETED | order_id=4
+[31/1/2026, 21:22:56] ORDER_CREATED | user_id=10 | order_id=5
+[31/1/2026, 21:23:00] ORDER_EXECUTED | order_id=5 | execution=1
+[31/1/2026, 21:23:00] ORDER_EXECUTED | order_id=5 | execution=2
+[31/1/2026, 21:24:00] ORDER_EXECUTED | order_id=5 | execution=3
+[31/1/2026, 21:24:00] ORDER_COMPLETED | order_id=5
+[31/1/2026, 21:25:00] ORDER_EXECUTED | order_id=5 | execution=4
+[31/1/2026, 21:25:00] ORDER_COMPLETED | order_id=5
+[31/1/2026, 21:26:02] ORDER_CREATED | user_id=10 | order_id=6
+[31/1/2026, 21:26:02] ORDER_EXECUTED | order_id=6 | execution=1
+[31/1/2026, 21:27:00] ORDER_EXECUTED | order_id=6 | execution=2
+[31/1/2026, 21:28:00] ORDER_EXECUTED | order_id=6 | execution=3
+[31/1/2026, 21:28:00] ORDER_COMPLETED | order_id=6
+[31/1/2026, 21:29:03] ORDER_CREATED | user_id=10 | order_id=1
+[31/1/2026, 21:29:44] ORDER_EXECUTED | order_id=1 | execution=1
+[31/1/2026, 21:29:44] ORDER_EXECUTED | order_id=1 | execution=2
+[31/1/2026, 21:29:44] ORDER_COMPLETED | order_id=1

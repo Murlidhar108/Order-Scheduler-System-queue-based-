@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// ✅ use existing logs folder
+// ✅ Use existing logs folder
 const logFile = path.join(__dirname, '../logs/orders.log');
 
 function getISTTime() {
@@ -12,13 +12,20 @@ function getISTTime() {
   });
 }
 
+/**
+ * Robust logging function
+ */
 function log(message) {
-try {
-     const line = `[${getISTTime()}] ${message}\n`;
-     fs.appendFileSync(logFile, line, 'utf8');
-} catch(err) {
-     console.error('⚠️ Logger failed:', err.message);
-}
+  try {
+    const line = `[${getISTTime()}] ${message}\n`;
+
+    // Append synchronously to avoid race conditions
+    fs.appendFileSync(logFile, line, 'utf8');
+  } catch (err) {
+    // Fallback: print to console if file write fails
+    console.error('⚠️ Logger failed:', err.message);
+    console.log(`[${getISTTime()}] ${message}`);
+  }
 }
 
 module.exports = { log };
