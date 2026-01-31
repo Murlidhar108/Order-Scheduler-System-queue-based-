@@ -1,26 +1,24 @@
 const orderQueue = require('../config/queue');
 const db = require('../config/db');
+const { log } = require('../utils/logger');
 
 console.log('🔥 Order worker started and listening...');   // ust to check, worker is working
 
-orderQueue.process(async (job) => {     // bull calls jon when active
+orderQueue.process(async (job) => {
   const { order_id, user_id } = job.data;
 
   console.log(`🕒 Executing order ${order_id} for user ${user_id}`);
 
-  // 1️⃣ Fetch order  (latest db details)
+  // 1️⃣ Fetch latest order
   const [rows] = await db.promise().query(
     'SELECT * FROM orders WHERE order_id = ?',
     [order_id]
   );
 
-  if (!rows.length) {
-    console.log('⚠️ Order not found:', order_id);
-    return;
-  }
+  if (!rows.length) return;
 
   const order = rows[0];
-  const newCount = order.execution_count + 1;  // new count
+  const newCount = order.execution_count + 1;
 
   // 2️⃣ Update execution count
   await db.promise().query(
@@ -28,47 +26,25 @@ orderQueue.process(async (job) => {     // bull calls jon when active
     [newCount, order_id]
   );
 
-  console.log(`✅ execution_count updated → ${newCount}`);
+  log(`ORDER_EXECUTED | order_id=${order_id} | execution=${newCount}`);
 
-  // 3️⃣ Recurring logic
-  if (
+  // 3️⃣ Decide recurrence
+  const shouldRepeat =
     Number(order.is_recurring) === 1 &&
-    (order.max_executions === null || newCount < order.max_executions)
-  ) {
-    console.log('🔁 Scheduling next execution');
-    // await scheduleNextRun(order);
-    db.query(
-  'SELECT * FROM orders WHERE order_id = ?',
-  [order_id],
-  (err, freshRows) => {
-    if (err || !freshRows.length) return;
+    (order.max_executions === null || newCount < order.max_executions);
 
-    const freshOrder = freshRows[0];
-
-    if (
-      Number(freshOrder.is_recurring) === 1 &&
-      (freshOrder.max_executions === null||    // changed this from !freshOrder.max_executions
-        newCount < freshOrder.max_executions)
-    ) {
-      scheduleNextRun(freshOrder);
-    } else {
-      db.query(
-        'UPDATE orders SET status = ? WHERE order_id = ?',
-        ['COMPLETED', order_id]
-      );
-      console.log(`🏁 Order ${order_id} completed`);
-    }
-  }
-);
-
+  if (shouldRepeat) {
+    await scheduleNextRun(order);
   } else {
     await db.promise().query(
       'UPDATE orders SET status = ? WHERE order_id = ?',
       ['COMPLETED', order_id]
     );
-    console.log(`🏁 Order ${order_id} completed`);
+
+    log(`ORDER_COMPLETED | order_id=${order_id}`);
   }
 });
+
 
 
 /**

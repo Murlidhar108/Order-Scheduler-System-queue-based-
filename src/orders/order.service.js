@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const orderQueue = require('../config/queue');
+const { log } = require('../utils/logger');
 
 /**
  * One-time order
@@ -24,6 +25,9 @@ exports.createOneTimeOrder = (user_id, schedule_time, callback) => {
         'UPDATE orders SET job_id = ? WHERE order_id = ?',
         [job.id, order_id]
       );
+
+      log(`ORDER_CREATED | user_id=${user_id} | order_id=${order_id}`);
+      
     });
 
     callback(null, order_id);
@@ -81,6 +85,9 @@ exports.createOrder = (data, callback) => {
           'UPDATE orders SET job_id = ? WHERE order_id = ?',
           [job.id, order_id]
         );
+
+          log(`ORDER_CREATED | user_id=${user_id} | order_id=${order_id}`);
+
       });
 
       callback(null, order_id);
