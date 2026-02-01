@@ -32,11 +32,12 @@
 
 ### The system uses MySQL to store user and order information. There are two main tables: User and Order.
 
+## 
 ```
 User Table
 
 Column Name	                           Type	                                       Description
-user_id	INT, PK, AUTO_INCREMENT     	Unique                                       ID for each user
+user_id     	                        Unique                                       ID for each user
 email	                                VARCHAR	                                     User’s email for login
 password	                            VARCHAR	                                     Hashed password for security
 token	                                VARCHAR	                                     JWT token for authentication
@@ -47,17 +48,17 @@ token	                                VARCHAR	                                  
 Order Table
 
 Column Name	                                         Type	                                 Description
-order_id	                                     INT, PK, AUTO_INCREMENT	                   Unique ID for each order
-user_id	                                       INT, FK	References user.user_id            links order to user
-order_name	                                         VARCHAR	                          Name or description of the order
-schedule_time                                       	DATETIME	                          Scheduled execution time for the order
-status	                                       'Scheduled','completed'                    	Current status of the order
-job_id	                                              VARCHAR	                           ID of the corresponding job in the Bull queue
-is_recurring	                                        BOOLEAN	                              Whether the order is recurring or one-time
-repeat_interval	                                        INT	                                       Interval value for recurring orders
-repeat_unit                                    	'minutes','hours','days'               	Time unit for recurring orders
-max_executions	                                         INT	                             Maximum number of times the order should execute
-executions_count	                                      INT	                              Number of times the order has already executed
+order_id	                                           AUTO_INCREMENT	                       Unique ID for each order
+user_id	                                           	 References user.user_id               Links order to user
+order_name	                                         VARCHAR	                             Name or description of the order
+schedule_time                                        DATETIME	                             Scheduled execution time for the order
+status	                                             Scheduled, completed                  Current status of the order
+job_id	                                             VARCHAR	                             ID of the corresponding job in the Bull queue
+is_recurring	                                       BOOLEAN	                             Whether the order is recurring or one-time
+repeat_interval	                                     INT	                                 Interval value for recurring orders
+repeat_unit                                    	     Minutes, Hours, Days'               	 Time unit for recurring orders
+max_executions	                                     INT	                                 Maximum number of times the order should execute
+executions_count	                                   INT	                                 Number of times the order has already executed
 ```
 
 
