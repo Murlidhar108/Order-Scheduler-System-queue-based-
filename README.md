@@ -18,32 +18,34 @@
 
 ## System Flow:
 
-The system follows a layered backend architecture where user interactions are handled through REST APIs, while order execution is processed asynchronously using 
-a background job queue.
+### The system follows a layered backend architecture where user interactions are handled through REST APIs, while order execution is processed asynchronously using a background job queue.
 
-Users interact with the API layer to authenticate and manage their orders. When an order is created, the backend stores the order details in the database and schedules a corresponding job in the queue for execution at the specified time or interval.
+### Users interact with the API layer to authenticate themselves and manage their orders. Once an order is created, the backend stores the order details in the database and schedules a corresponding job in the queue for execution at the specified time or interval.
 
-A worker processes the job by simulating order placement, updating execution status, and writing logs. This separation of request handling and execution ensures reliable, non-blocking, and fault-tolerant order processing.
+### A worker then processes the job by simulating order placement, updating the execution status in the database, and writing logs. This separation between request handling and execution ensures reliable, non-blocking, and fault-tolerant processing of scheduled orders
 
-Client → API Layer → Database → Job Queue → Worker → Execution → Logs
-
+## Client → API Layer → Database → Job Queue → Worker → Execution → Logs
 
 
-Database Schema
 
-The system uses MySQL to store user and order information. There are two main tables: User and Order.
+## Database Schema
 
+### The system uses MySQL to store user and order information. There are two main tables: User and Order.
+
+```
 User Table
+
 Column Name	                           Type	                                       Description
 user_id	INT, PK, AUTO_INCREMENT     	Unique                                       ID for each user
 email	                                VARCHAR	                                     User’s email for login
 password	                            VARCHAR	                                     Hashed password for security
 token	                                VARCHAR	                                     JWT token for authentication
+```
 
 
-
-
+```
 Order Table
+
 Column Name	                                         Type	                                 Description
 order_id	                                     INT, PK, AUTO_INCREMENT	                   Unique ID for each order
 user_id	                                       INT, FK	References user.user_id            links order to user
@@ -56,7 +58,7 @@ repeat_interval	                                        INT	                    
 repeat_unit                                    	'minutes','hours','days'               	Time unit for recurring orders
 max_executions	                                         INT	                             Maximum number of times the order should execute
 executions_count	                                      INT	                              Number of times the order has already executed
-
+```
 
 
 
