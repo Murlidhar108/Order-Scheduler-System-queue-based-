@@ -66,33 +66,30 @@ executions_count	                                   INT	                        
 
 
 
-Order Scheduling Logic
+## Order Scheduling Logic
 
-One-Time Orders
+### One-Time Orders
 
-These orders are executed only once at the scheduled time specified by the user. When a one-time order is created:
-The order details are stored in the Order table. A job is added to the Bull queue with a delay corresponding to the scheduled execution time.
-The job executes at the scheduled time and updates the order status in the database once completed.
+#### These orders are executed only once at the scheduled time specified by the user. When a one-time order is created:
+#### The order details are stored in the Order table. A job is added to the Bull queue with a delay corresponding to the scheduled execution time.
+#### The job executes at the scheduled time and updates the order status in the database once completed.
 
-2️⃣ Recurring Orders
+### Recurring Orders
 
-Recurring orders are executed multiple times at defined intervals, up to a maximum number of executions.
-Key fields controlling recurring behavior:
-repeat_interval – the time between executions (e.g., 5 minutes, 1 hour)
-repeat_unit – the unit of the interval (minutes, hours, days)
-max_executions – the maximum number of times the order should execute
-executions_count – tracks how many times the order has been executed so far
-Each time the job runs, executions_count is incremented and got updated in database. Once it reaches max_executions, the recurring job is automatically stopped.
+#### Recurring orders are executed multiple times at defined intervals, up to a maximum number of executions.
+#### Key fields controlling recurring behavior:
+#### repeat_interval – the time between executions (e.g., 5 minutes, 1 hour)
+#### repeat_unit – the unit of the interval (minutes, hours, days)
+#### max_executions – the maximum number of times the order should execute
+#### executions_count – tracks how many times the order has been executed so far
+#### Each time the job runs, executions_count is incremented and got updated in database. Once it reaches max_executions, the recurring job is automatically stopped.
 
 
-Job Linking: Database ↔ Bull Queue
+## Job Linking: Database ↔ Bull Queue
 
-Every order is associated with a job in Bull, identified by a unique job_id.
+### Every order is associated with a job in Bull, identified by a unique job_id.
 This link allows the backend to:
-Track which job corresponds to which order
-Cancel or update jobs if the user modifies or deletes an order
-Maintain reliability and fault tolerance, ensuring jobs are executed even if the server restarts
-For recurring orders, the job is repeatable in Bull, and its execution state is synchronized with the database using executions_count and status.
+Track which job corresponds to which order, Cancel or update jobs if the user modifies or deletes an orde. Maintain reliability and fault tolerance, ensuring jobs are executed even if the server restarts. For recurring orders, the job is repeatable in Bull, and its execution state is synchronized with the database using executions_count and status.
 
 
   User → place an order → DB → Bull Queue → Execution → Update DB → Log
