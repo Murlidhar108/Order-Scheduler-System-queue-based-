@@ -2,22 +2,21 @@
 
 ## The project is about queue based order scheduling system in which user will be authenticated and they schedule their orders. Orders may be one time order or can have recurring nature,  it is totally based on the user requirement. Along with this user can manage their orders like they can view, update or even delete them. They can also convert the one time order to recurring nature or vice versa. For the History purpose, status of the order are logged into the log file along with their ids, and timestamps and status. The project was to demonstrate how scheduled and recurring tasks can be handled reliably in a backend system using a queue-based architecture.
 
-## Features 
+### Features 
 - Authentication (JWT)
 - One-time & recurring orders
 - Queue-based execution
 - Logging / notifications
 - CRUD operations
 
-Tech Stack
+### Tech Stack
+- Backend - Node.js
+- Database - MySql
+- Queue - Bull
+- Auth - Jwt
+- Logging - File Handling
 
-Backend - Node.js
-Database - MySql
-Queue - Bull
-Auth - Jwt
-Logging - File Handling
-
-System Flow:
+## System Flow:
 
 The system follows a layered backend architecture where user interactions are handled through REST APIs, while order execution is processed asynchronously using 
 a background job queue.
