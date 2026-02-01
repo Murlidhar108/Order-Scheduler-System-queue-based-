@@ -170,6 +170,18 @@ Order-System-Scheduling
 
 
 
+# Scope of the Project
+
+### Distributed Workers:  - Scaling the system to multiple worker instances for high-volume order processing.
+### Real Email or SMS Notifications:  - Notify users when orders are executed or fail.
+### Admin Dashboard:  - View, monitor, and manage all users and orders in one place.
+### Dynamic Products & Quantities:  - Support variable items instead of fixed ones.
+### Retry & Failure Policies:  - Automatically retry failed jobs or alert users for manual intervention.
+### Enhanced Analytics:  - Track user order patterns, execution history, and system performance metrics.
+
+
+
+
 
 
 
