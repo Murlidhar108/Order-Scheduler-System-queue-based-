@@ -88,44 +88,42 @@ executions_count	                                   INT	                        
 ## Job Linking: Database ↔ Bull Queue
 
 ### Every order is associated with a job in Bull, identified by a unique job_id.
-This link allows the backend to:
-Track which job corresponds to which order, Cancel or update jobs if the user modifies or deletes an orde. Maintain reliability and fault tolerance, ensuring jobs are executed even if the server restarts. For recurring orders, the job is repeatable in Bull, and its execution state is synchronized with the database using executions_count and status.
+### This link allows the backend to:
+### Track which job corresponds to which order, Cancel or update jobs if the user modifies or deletes an orde. Maintain reliability and fault tolerance, ensuring jobs are executed even if the server restarts. For recurring orders, the job is repeatable in Bull, and its execution state is synchronized with the database using executions_count and status.
 
 
-  User → place an order → DB → Bull Queue → Execution → Update DB → Log
-
-
-
-  Reliability & Fault Tolerance
-Fault tolerance
-A bull queue allows the backend to decouple order creation from execution, meaning:
-Users can schedule orders without waiting for them to execute Jobs are handled asynchronously so tha multiple jobs can be processed concurrently without blocking the server
-Job queues also allow centralized tracking of execution state (pending, running, completed, failed).
-
-Reliability
-Scheduled jobs execute at the correct time andjJobs are not lost due to server crashes or failures.
-Recurring jobs execute exactly the intended number of times (max_executions).
-Failed jobs can be retried or tracked for manual intervention. 
-
-
-API Documentation
-
-1. http://localhost:3000/auth/signup -> user signup
-2. http://localhost:3000/auth/login -> user login
-3. http://localhost:3000/orders/create -> create orders (some feils are optional)
-4. http://localhost:3000/orders/ -> view all orders for a user
-5. http://localhost:3000/orders/: order_id -> update order
-6. http://localhost:3000/orders/: order_id -> delete a specific order
-7. http://localhost:3000/auth/me  -> get details of current user
-8. http://localhost:3000/auth/logout  -> user log out
+  ## User → place an order → DB → Bull Queue → Execution → Update DB → Log
 
 
 
-Setup & Installation
+## Reliability & Fault Tolerance
+### Fault tolerance
+#### A bull queue allows the backend to decouple order creation from execution, meaning:
+#### Users can schedule orders without waiting for them to execute Jobs are handled asynchronously so tha multiple jobs can be processed concurrently without blocking the server. Job queues also allow centralized tracking of execution state (pending, running, completed, failed).
 
-1. clone repo
-2. set up env files with all details + install Mysql Workbench + Postman
-3. install dependencies and modules.
+### Reliability
+#### Scheduled jobs execute at the correct time andjJobs are not lost due to server crashes or failures. Recurring jobs execute exactly the intended number of times (max_executions). Failed jobs can be retried or tracked for manual intervention. 
+
+
+## API Documentation
+
+1. user signup [http://localhost:3000/auth/signup](http://localhost:3000/auth/signup) 
+2. user login [http://localhost:3000/auth/login](http://localhost:3000/auth/login) 
+3. create orders (some feils are optional) [http://localhost:3000/orders/create](http://localhost:3000/orders/create) 
+4. view all orders for a user [http://localhost:3000/orders/](http://localhost:3000/orders/) 
+5. update order [http://localhost:3000/orders/:order_id](http://localhost:3000/orders/:order_id) 
+6. delete a specific order [http://localhost:3000/orders/:order_id](http://localhost:3000/orders/:order_id) 
+7. get details of current user [http://localhost:3000/auth/me](http://localhost:3000/auth/me) 
+8. user log out [http://localhost:3000/auth/logout](http://localhost:3000/auth/logout)  
+
+
+
+## Setup & Installation
+
+### 1. clone repo
+### 2. set up env files with all details + install Mysql Workbench + Postman
+### 3. install dependencies and modules.
+    ```
       For backend
         -> in root directory: (1) npm install
                               (2) npm run dev   ( in the root directory )
@@ -135,6 +133,7 @@ Setup & Installation
          (1) cd client
          (2) npm install
          (3) npm run dev
+      ```
 
 Order-System-Scheduling
 ├──────── src/
